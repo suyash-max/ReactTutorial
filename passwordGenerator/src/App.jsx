@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState ,useEffect, useRef } from "react";
 import { useCallback } from "react";
 import "./App.css";
 
@@ -21,9 +21,25 @@ function App() {
       pass += str.charAt(char);
     }
     setPassword(pass);
-  }, [length, numberAllowed, characterAllowed]);
+  }, [length, numberAllowed, characterAllowed,setPassword]);
+  useEffect(() => {
+    PasswordGenerator();
+  }, [length, numberAllowed, characterAllowed, PasswordGenerator]);
+  //use ref  
+  const passwordRef = useRef(null);
+  const PasswordCopy = useCallback(() => {
+    passwordRef.current ?.select();
+    passwordRef.current ?.setSelectionRange(0, 999); // For mobile devices
+    window.navigator.clipboard.writeText(Password);
 
-  return (
+    
+  }, [Password]);
+
+
+
+
+
+  return(
     <>
       <div className="w-full max-w-md mx-auto shadow-md rounded-lg px-4 py-3 my-8 bg-gray-800 text-orange-500">
         <div className="text-white text-center my-3">Password Generator</div>
@@ -34,8 +50,9 @@ function App() {
             className="outline-none w-full py-1 px-3 bg-white text-gray-800"
             placeholder="Generated Password"
             readOnly
+            ref ={passwordRef}
           />
-          <button className="outline-none bg-blue-700 text-white px-3 py-0.5 shrink-0">
+          <button className="outline-none bg-blue-700 text-white px-3 py-0.5 shrink-0 cursor-pointer" onClick={PasswordCopy} >
             Copy
           </button>
         </div>
